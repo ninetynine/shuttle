@@ -65,6 +65,7 @@ if (!function_exists('dump')) {
 	 */
 	function dump($data)
 	{
+		header('Content-Type: text/html');
 		$data = func_get_args();
 
 		echo '<pre>';
@@ -79,11 +80,12 @@ if (!function_exists('dd')) {
 	 */
 	function dd($data)
 	{
+		header('Content-Type: text/html');
 		$data = func_get_args();
 
 		echo '<pre>';
 		var_dump(...$data);
-		die('</pre>');
+		exit('</pre>');
 	}
 }
 
