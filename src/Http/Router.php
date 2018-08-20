@@ -56,14 +56,13 @@ class Router
 	 */
 	public function capture()
 	{
-		$query = $_GET[ self::QUERY_STRING ];
-		$query = Str::startsWith('/', $query) ? $query : '/' . $query;
+		$request = new Request;
 
-		$method = strtoupper($_SERVER[ 'REQUEST_METHOD' ]);
+		$query         = $request->uri();
+		$method        = $request->method();
+		$segment_count = $request->segmentCount();
+
 		$routes = $this->routes;
-
-		$segments      = array_filter(explode('/', $query));
-		$segment_count = count($segments);
 
 		foreach ($routes as $route) {
 
@@ -101,7 +100,7 @@ class Router
 						continue;
 					}
 
-					$test = $this->callMiddleware($this->getMiddleware($callable));
+					$test = $this->callMiddleware($this->getMiddleware($callable), [ $request ]);
 
 					if ($test === 1) {
 
@@ -126,7 +125,7 @@ class Router
 			$controller = $route->getController();
 
 			// Call controller
-			$response = $this->callController($controller);
+			$response = $this->callController($controller, [ $request ]);
 
 			if ($response === 1) {
 				Response::error(
@@ -146,7 +145,7 @@ class Router
 				$last_response = $response;
 
 				foreach ($transformers as $callable) {
-					$transformed = $this->callTransformer($callable, [ $last_response ]);
+					$transformed = $this->callTransformer($callable, [ $last_response, $request ]);
 
 					if ($transformed === 1) {
 						Response::error(
