@@ -1,9 +1,9 @@
 <?php
 namespace Shuttle\Http\Methods;
 
-use Shuttle\Interfaces\Http\Method;
+use Shuttle\Interfaces\Http\IMethod;
 
-class Post extends Method
+class Post extends IMethod
 {
 
 }

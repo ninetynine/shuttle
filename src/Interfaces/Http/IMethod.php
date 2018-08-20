@@ -5,7 +5,7 @@ use Shuttle\Exceptions\InvalidController;
 use Shuttle\Helpers\Str;
 use Shuttle\Http\Response;
 
-abstract class Method
+abstract class IMethod
 {
 	/** @var string $prefix */
 	protected $prefix;

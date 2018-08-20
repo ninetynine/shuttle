@@ -2,23 +2,26 @@
 namespace Shuttle\Http;
 
 use Shuttle\Application;
-use Shuttle\Helpers\Str;
+
 use Shuttle\Http\Methods\Get;
 use Shuttle\Http\Methods\Post;
+use Shuttle\Http\Methods\Put;
+use Shuttle\Http\Methods\Patch;
+use Shuttle\Http\Methods\Delete;
+use Shuttle\Http\Methods\Link;
+use Shuttle\Http\Methods\Unlink;
 
-use Shuttle\Interfaces\Http\Method;
+use Shuttle\Interfaces\Http\IMethod;
 
 class Router
 {
-	const QUERY_STRING = '__SHUTTLE__';
-
 	/** @var Router $instance */
 	private static $instance;
 
 	/** @var Application $app */
 	private $app;
 
-	/** @var Method[] */
+	/** @var IMethod[] */
 	protected $routes = [];
 
 	/** @var string[] $middleware */
@@ -222,6 +225,7 @@ class Router
 				return 1;
 			}
 
+			/** @noinspection PhpIncludeInspection */
 			require_once $class;
 
 			$callable[ 0 ] = app()->getNamespace($type) . $callable[ 0 ];
@@ -240,7 +244,7 @@ class Router
 	}
 
 	/**
-	 * @return Method[]
+	 * @return IMethod[]
 	 */
 	public function getRoutes()
 	{
@@ -310,6 +314,86 @@ class Router
 	public function post(string $route, $options, $controller = null)
 	{
 		$method = new Post($route, $options, $controller);
+
+		$this->routes[] = &$method;
+
+		return $method;
+	}
+
+	/**
+	 * @param string                $route
+	 * @param string|\Closure|array $options
+	 * @param string|\Closure       $controller
+	 *
+	 * @return Put
+	 */
+	public function put(string $route, $options, $controller = null)
+	{
+		$method = new Put($route, $options, $controller);
+
+		$this->routes[] = &$method;
+
+		return $method;
+	}
+
+	/**
+	 * @param string                $route
+	 * @param string|\Closure|array $options
+	 * @param string|\Closure       $controller
+	 *
+	 * @return Patch
+	 */
+	public function Patch(string $route, $options, $controller = null)
+	{
+		$method = new Patch($route, $options, $controller);
+
+		$this->routes[] = &$method;
+
+		return $method;
+	}
+
+	/**
+	 * @param string                $route
+	 * @param string|\Closure|array $options
+	 * @param string|\Closure       $controller
+	 *
+	 * @return Delete
+	 */
+	public function delete(string $route, $options, $controller = null)
+	{
+		$method = new Delete($route, $options, $controller);
+
+		$this->routes[] = &$method;
+
+		return $method;
+	}
+
+	/**
+	 * @param string                $route
+	 * @param string|\Closure|array $options
+	 * @param string|\Closure       $controller
+	 *
+	 * @return Link
+	 */
+	public function link(string $route, $options, $controller = null)
+	{
+		$method = new Link($route, $options, $controller);
+
+		$this->routes[] = &$method;
+
+		return $method;
+	}
+
+	/**
+	 * @param string                $route
+	 * @param string|\Closure|array $options
+	 * @param string|\Closure       $controller
+	 *
+	 * @return Unlink
+	 */
+	public function unlink(string $route, $options, $controller = null)
+	{
+		$method = new Unlink($route, $options, $controller);
 
 		$this->routes[] = &$method;
 
