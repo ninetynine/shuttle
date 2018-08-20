@@ -27,7 +27,7 @@ class Request
 	{
 		$query = $_GET[ self::QUERY_STRING ];
 
-		$this->uri      = Str::startsWith('/', $query[ 0 ]) ? $query : '/' . $query;
+		$this->uri      = Str::startsWith('/', $query) ? $query : '/' . $query;
 		$this->segments = array_filter(explode('/', $this->uri));
 		$this->method   = strtoupper($_SERVER[ 'REQUEST_METHOD' ]);
 
