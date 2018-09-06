@@ -2,11 +2,16 @@
 namespace Shuttle;
 
 use Shuttle\Exceptions\DuplicateProvider;
+use Shuttle\Exceptions\InvalidName;
 use Shuttle\Http\Router;
 use Shuttle\Interfaces\IProvider;
 
 class Application
 {
+	/** @var string[] RESERVED */
+	const RESERVED
+		= [ 'base', 'app' ];
+
 	/** @var Application $instance */
 	private static $instance;
 
@@ -54,6 +59,7 @@ class Application
 	 * @param string $base_path
 	 * @param string $app_path
 	 *
+	 * @throws InvalidName
 	 * @return void
 	 */
 	private function __construct(string $base_path, string $app_path)
@@ -61,17 +67,23 @@ class Application
 		$this->paths[ 'base' ] = $base_path;
 		$this->paths[ 'app' ]  = $app_path;
 
-		$this->paths[ 'providers' ] = $app_path . '/Providers';
-
-		$this->paths[ 'controllers' ]  = $app_path . '/Http/Controllers';
-		$this->paths[ 'middleware' ]   = $app_path . '/Http/Middleware';
-		$this->paths[ 'transformers' ] = $app_path . '/Http/Transformers';
-
 		$this->setNamespace('controllers', '\\App\\Http\\Controllers\\');
-		$this->setNamespace('transformers', '\\App\\Http\\Transformers\\');
+		$this->setPath('controllers', $app_path . '/Http/Controllers');
+
 		$this->setNamespace('middleware', '\\App\\Http\\Middleware\\');
+		$this->setPath('middleware', $app_path . '/Http/Middleware');
+
+		$this->setNamespace('transformers', '\\App\\Http\\Transformers\\');
+		$this->setPath('transformers', $app_path . '/Http/Transformers');
 
 		$this->setNamespace('providers', 'App\\Providers\\');
+		$this->setPath('providers', $app_path . '/Providers');
+
+		$this->setNamespace('validators', '\\App\\Validators\\');
+		$this->setPath('validators', $app_path . '/Validators');
+
+		$this->setNamespace('validator_rules', '\\App\\Validators\\Rules\\');
+		$this->setPath('validator_rules', $app_path . '/Validator/Rules');
 
 		$this->router = Router::initialize($this);
 	}
@@ -85,11 +97,23 @@ class Application
 	}
 
 	/**
-	 * @return string[]
+	 * @param string $name
+	 * @param string $path
+	 *
+	 * @throws InvalidName
+	 * @return $this
 	 */
-	public function getPaths()
+	public function setPath(string $name, string $path)
 	{
-		return $this->paths;
+		$name = strtolower($name);
+
+		if (in_array($name, self::RESERVED)) {
+			throw new InvalidName;
+		}
+
+		$this->paths[ $name ] = $path;
+
+		return $this;
 	}
 
 	/**
@@ -102,11 +126,25 @@ class Application
 	{
 		$path = $this->paths[ $name ];
 
-		if (empty($path) && !empty($fallback)) {
-			$path = $this->paths[ $name ] = $fallback;
+		try {
+			if (empty($path) && !empty($fallback)) {
+				$path = $fallback;
+
+				$this->setPath($name, $fallback);
+			}
+		} catch (InvalidName $e) {
+			return null;
 		}
 
 		return $path;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getPaths()
+	{
+		return $this->paths;
 	}
 
 	/**

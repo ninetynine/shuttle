@@ -2,9 +2,13 @@
 namespace Shuttle\Http;
 
 use Shuttle\Helpers\Str;
+use Shuttle\Traits\HasValidator;
+use Shuttle\Validators\Validator;
 
 class Request
 {
+	use HasValidator;
+
 	/** @var string QUERY_STRING */
 	const QUERY_STRING = '__SHUTTLE__';
 
@@ -14,13 +18,13 @@ class Request
 	/** @var string $method */
 	protected $method;
 
-	/** @var string[] */
+	/** @var string[] $params */
 	protected $params = [];
 
-	/** @var mixed[] */
+	/** @var mixed[] $body */
 	protected $body = [];
 
-	/** @var string[] */
+	/** @var string[] $segments */
 	protected $segments = [];
 
 	public function __construct()
@@ -42,7 +46,8 @@ class Request
 			$body = json_decode($body, true);
 		}
 
-		$this->body = $body;
+		$this->body      = $body;
+		$this->validator = new Validator;
 	}
 
 	/**
@@ -114,5 +119,18 @@ class Request
 		return array_filter($this->all(), function($input) use ($inputs) {
 			return in_array($input, $inputs);
 		}, ARRAY_FILTER_USE_KEY);
+	}
+
+	/**
+	 * @param array $rules
+	 *
+	 * @throws \Shuttle\Exceptions\InvalidRule
+	 * @return Validator
+	 */
+	public function validate(array $rules)
+	{
+		$this->validator->validate($this->all(), $rules);
+
+		return $this->validator;
 	}
 }
