@@ -1,5 +1,5 @@
 <?php
-namespace Shuttle\Helpers\Validator;
+namespace Shuttle\Interfaces\Validators;
 
 abstract class IRule
 {

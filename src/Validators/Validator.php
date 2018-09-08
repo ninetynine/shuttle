@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Validators;
 
-use Shuttle\Helpers\Validator\IRule;
+use Shuttle\Interfaces\Validators\IRule;
 use Shuttle\Exceptions\InvalidRule;
 
 class Validator
