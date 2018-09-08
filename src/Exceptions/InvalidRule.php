@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class InvalidRule extends \Exception
+class InvalidRule extends Exception
 {
 
 }

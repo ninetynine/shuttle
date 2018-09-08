@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class InvalidRuleSet extends \Exception
+class InvalidRuleSet extends Exception
 {
 
 }

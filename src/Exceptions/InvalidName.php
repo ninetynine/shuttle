@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class InvalidName extends \Exception
+class InvalidName extends Exception
 {
 
 }

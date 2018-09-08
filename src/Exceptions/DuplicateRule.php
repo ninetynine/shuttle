@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class DuplicateRule extends \Exception
+class DuplicateRule extends Exception
 {
 
 }

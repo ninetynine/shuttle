@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class DuplicateKey extends \Exception
+class DuplicateKey extends Exception
 {
 
 }

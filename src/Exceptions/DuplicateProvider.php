@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Exceptions;
 
-class DuplicateProvider extends \Exception
+class DuplicateProvider extends Exception
 {
 
 }
