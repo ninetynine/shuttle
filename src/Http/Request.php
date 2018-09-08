@@ -5,6 +5,8 @@ use Shuttle\Helpers\Str;
 use Shuttle\Traits\HasValidator;
 use Shuttle\Validators\Validator;
 
+use Shuttle\Exceptions\InvalidData;
+
 class Request
 {
 	use HasValidator;
@@ -130,6 +132,24 @@ class Request
 	public function validate(array $rules)
 	{
 		$this->validator->validate($this->all(), $rules);
+
+		return $this->validator;
+	}
+
+	/**
+	 * @param array $rules
+	 *
+	 * @throws \Shuttle\Exceptions\InvalidRule
+	 * @throws \Shuttle\Exceptions\InvalidData
+	 * @return Validator
+	 */
+	public function volatileValidate(array $rules)
+	{
+		$this->validate($rules);
+
+		if ($this->hasErrors()) {
+			throw (new InvalidData)->setData($this->errors());
+		}
 
 		return $this->validator;
 	}
