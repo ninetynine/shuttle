@@ -128,7 +128,10 @@ abstract class IMethod
 	 */
 	public function getFullRoute()
 	{
-		return $this->prefix . $this->route;
+		$full_route = $this->prefix . $this->route;
+
+		return Str::endsWith('/', $full_route)
+			? substr($full_route, 0, -1) : $full_route;
 	}
 
 	/**

@@ -342,7 +342,7 @@ class Router
 	 *
 	 * @return Patch
 	 */
-	public function Patch(string $route, $options, $controller = null)
+	public function patch(string $route, $options, $controller = null)
 	{
 		$method = new Patch($route, $options, $controller);
 

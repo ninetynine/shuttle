@@ -93,11 +93,37 @@ class Request
 	}
 
 	/**
+	 * @param string $key
+	 * @param mixed  $fallback
+	 *
+	 * @return string
+	 */
+	public function query(string $key = null, $fallback = null)
+	{
+		return !is_null($key)
+			? $this->params[ $key ] ?? $fallback
+			: $this->params;
+	}
+
+	/**
 	 * @return mixed[]
 	 */
 	public function body()
 	{
 		return $this->body;
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed  $fallback
+	 *
+	 * @return mixed
+	 */
+	public function input(string $key = null, $fallback = null)
+	{
+		return !is_null($key)
+			? $this->body[ $key ] ?? $fallback
+			: $this->body;
 	}
 
 	/**
@@ -115,8 +141,8 @@ class Request
 	 */
 	public function only($input)
 	{
-		$inputs = is_array($input)
-			? $input : func_get_args();
+		$inputs = !is_array($input)
+			? func_get_args() : $input;
 
 		return array_filter($this->all(), function($input) use ($inputs) {
 			return in_array($input, $inputs);

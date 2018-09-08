@@ -86,4 +86,15 @@ class Route
 	{
 		return Router::initialize()->unlink($route, $options, $controller);
 	}
+
+	/**
+	 * @param array    $options
+	 * @param \Closure $closure
+	 *
+	 * @return void
+	 */
+	public static function group(array $options, \Closure $closure)
+	{
+		call_user_func($closure, new RouteGroup($options));
+	}
 }
