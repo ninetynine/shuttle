@@ -1,7 +1,7 @@
 <?php
 namespace Shuttle\Validators\Rules;
 
-use Shuttle\Helpers\Validator\IRule;
+use Shuttle\Interfaces\Validators\IRule;
 
 class Nullable extends IRule
 {
