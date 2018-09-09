@@ -1,90 +1,55 @@
 <?php
 namespace Shuttle\Http;
 
-class Route
+use Shuttle\Interfaces\Http\IRoute;
+
+use Shuttle\Http\Methods\Get;
+use Shuttle\Http\Methods\Post;
+use Shuttle\Http\Methods\Put;
+use Shuttle\Http\Methods\Patch;
+use Shuttle\Http\Methods\Delete;
+use Shuttle\Http\Methods\Link;
+use Shuttle\Http\Methods\Unlink;
+
+/**
+ * Class Route
+ *
+ * @method static Get get(string $route, $options, $controller = null)
+ * @method static Post post(string $route, $options, $controller = null)
+ * @method static Put put(string $route, $options, $controller = null)
+ * @method static Patch patch(string $route, $options, $controller = null)
+ * @method static Delete delete(string $route, $options, $controller = null)
+ * @method static Link link(string $route, $options, $controller = null)
+ * @method static Unlink unlink(string $route, $options, $controller = null)
+ *
+ * @package Shuttle\Http
+ */
+class Route extends IRoute
 {
 	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
+	 * @param string $method
+	 * @param array  $params
 	 *
-	 * @return Methods\Get
+	 * @return null
 	 */
-	public static function get(string $route, $options, $controller = null)
+	public function __call($method, $params)
 	{
-		return Router::initialize()->get($route, $options, $controller);
+		return null;
 	}
 
 	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
+	 * @param string $method
+	 * @param array  $params
 	 *
-	 * @return Methods\Post
+	 * @return null|\Shuttle\Interfaces\Http\IMethod
 	 */
-	public static function post(string $route, $options, $controller = null)
+	public static function __callStatic($method, $params)
 	{
-		return Router::initialize()->post($route, $options, $controller);
-	}
+		if (!in_array($method, static::$methods)) {
+			return null;
+		}
 
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Put
-	 */
-	public static function put(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->put($route, $options, $controller);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Patch
-	 */
-	public static function patch(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->patch($route, $options, $controller);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Delete
-	 */
-	public static function delete(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->delete($route, $options, $controller);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Link
-	 */
-	public static function link(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->link($route, $options, $controller);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Unlink
-	 */
-	public static function unlink(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->unlink($route, $options, $controller);
+		return Router::initialize()->{$method}(...$params);
 	}
 
 	/**

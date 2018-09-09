@@ -1,7 +1,30 @@
 <?php
 namespace Shuttle\Http;
 
-class RouteGroup
+use Shuttle\Interfaces\Http\IRoute;
+
+use Shuttle\Http\Methods\Get;
+use Shuttle\Http\Methods\Post;
+use Shuttle\Http\Methods\Put;
+use Shuttle\Http\Methods\Patch;
+use Shuttle\Http\Methods\Delete;
+use Shuttle\Http\Methods\Link;
+use Shuttle\Http\Methods\Unlink;
+
+/**
+ * Class Route
+ *
+ * @method Get get(string $route, $options, $controller = null)
+ * @method Post post(string $route, $options, $controller = null)
+ * @method Put put(string $route, $options, $controller = null)
+ * @method Patch patch(string $route, $options, $controller = null)
+ * @method Delete delete(string $route, $options, $controller = null)
+ * @method Link link(string $route, $options, $controller = null)
+ * @method Unlink unlink(string $route, $options, $controller = null)
+ *
+ * @package Shuttle\Http
+ */
+class RouteGroup extends IRoute
 {
 	/** @var array $options */
 	protected $options = [];
@@ -15,108 +38,34 @@ class RouteGroup
 	}
 
 	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
+	 * @param string $method
+	 * @param array  $params
 	 *
-	 * @return Methods\Get
+	 * @return null|\Shuttle\Interfaces\Http\IMethod
 	 */
-	public function get(string $route, $options, $controller = null)
+	public function __call($method, $params)
 	{
-		return Router::initialize()->get(
-			$route,
-			...$this->mergeOptions($options, $controller)
+		if (!in_array($method, static::$methods)) {
+			return null;
+		}
+
+		$params = array_pad($params, 3, null);
+
+		return Router::initialize()->{$method}(
+			$params[ 0 ],
+			...$this->mergeOptions($params[ 1 ], $params[ 2 ])
 		);
 	}
 
 	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
+	 * @param string $method
+	 * @param array  $params
 	 *
-	 * @return Methods\Post
+	 * @return null
 	 */
-	public function post(string $route, $options, $controller = null)
+	public static function __callStatic($method, $params)
 	{
-		return Router::initialize()->post(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Put
-	 */
-	public function put(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->put(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Patch
-	 */
-	public function patch(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->patch(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Delete
-	 */
-	public function delete(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->delete(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Link
-	 */
-	public function link(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->link(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
-	}
-
-	/**
-	 * @param string                $route
-	 * @param string|\Closure|array $options
-	 * @param string|\Closure       $controller
-	 *
-	 * @return Methods\Unlink
-	 */
-	public function unlink(string $route, $options, $controller = null)
-	{
-		return Router::initialize()->unlink(
-			$route,
-			...$this->mergeOptions($options, $controller)
-		);
+		return null;
 	}
 
 	/**
