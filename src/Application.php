@@ -1,10 +1,11 @@
 <?php
 namespace Shuttle;
 
-use Shuttle\Exceptions\DuplicateProvider;
-use Shuttle\Exceptions\InvalidName;
 use Shuttle\Http\Router;
 use Shuttle\Interfaces\IProvider;
+
+use Shuttle\Exceptions\DuplicateProvider;
+use Shuttle\Exceptions\InvalidName;
 
 class Application
 {
@@ -66,6 +67,8 @@ class Application
 	{
 		$this->paths[ 'base' ] = $base_path;
 		$this->paths[ 'app' ]  = $app_path;
+
+		$this->loadEnv();
 
 		$this->setNamespace('controllers', '\\App\\Http\\Controllers\\');
 		$this->setPath('controllers', $app_path . '/Http/Controllers');
@@ -314,6 +317,16 @@ class Application
 
 			$this->providers[ $name ] = &$instance;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function loadEnv()
+	{
+		(new \Dotenv\Dotenv($this->getBasePath()))->load();
 
 		return $this;
 	}

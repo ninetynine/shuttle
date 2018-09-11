@@ -8,7 +8,9 @@
       "email": "dexter@marks-barber.co.uk"
     }
   ],
-  "require": {},
+  "require": {
+    "vlucas/phpdotenv": "^2.5"
+  },
   "autoload": {
     "files": [
       "src/Helpers/helpers.php"

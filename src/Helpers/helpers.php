@@ -59,6 +59,19 @@ if (!function_exists('base_path')) {
 	}
 }
 
+if (!function_exists('env')) {
+	/**
+	 * @param string $key
+	 * @param mixed  $fallback
+	 *
+	 * @return mixed
+	 */
+	function env(string $key, $fallback = null)
+	{
+		return getenv($key) ?: $fallback;
+	}
+}
+
 if (!function_exists('dump')) {
 	/**
 	 * @param mixed $data
